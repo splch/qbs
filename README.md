@@ -72,16 +72,6 @@ def qbrs(X, y, n):
     return X_sub, y_sub
 ```
 
-## At a Glance
-
-Quantile-Based Representative Subsampling (QBRS) is a useful method for selecting a representative subset of data when the original dataset is too large to analyze or visualize effectively. QBRS is particularly useful when dealing with high-dimensional data, where it can be difficult to identify a representative subset manually.
-
-QBRS works by dividing the data into quantiles across each dimension, then selecting samples that are closest to the quantile boundaries across all dimensions. By doing so, QBRS ensures that the final subset captures the overall distribution of the original data across the chosen dimensions.
-
-The algorithm involves calculating the required number of quantiles for each dimension, dividing the data into quantiles, creating all possible combinations of quantile boundaries, and then finding the sample closest to each combination's boundary values. The resulting subset should be a representative sample of the original data across the chosen dimensions.
-
-QBRS can be applied to a wide range of datasets, and it is particularly useful for visualizing large datasets or identifying key patterns and trends within data. However, it is important to note that QBRS may not be suitable for all datasets, and users should exercise caution when interpreting the results of any subsampling method.
-
 ## Limitations / Assumptions
 
 - Continuous dimensions: Assumes the selected dimensions are continuous in nature. It may not perform well on categorical dimensions, as the concept of quantiles may not be applicable or may need modifications to accommodate categorical data.
