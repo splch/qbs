@@ -8,7 +8,6 @@ The Quantile-Based Balanced Sampling Algorithm is a method for balancing imbalan
 - [Steps](#steps)
 - [Usage](#usage)
 - [Example](#example)
-- [Optimizations](#optimizations)
 - [Contributing](#contributing)
 
 ## Overview
@@ -17,31 +16,21 @@ The algorithm works by calculating quantiles for each feature in the dataset, ge
 
 ## Steps
 
-1. Count the unique non-minority class labels (`c`).
+1. Count the unique non-minority class labels (c), minority class samples (m), and features (f).
 
-2. Count the minority class samples (`m`).
+2. Create an empty set (d) and add all minority class samples to it.
 
-3. Create an empty set (`d`) and add all minority class samples to it.
+3. Calculate the number of quantiles (q) such that `f^q=c*m`.
 
-4. Calculate the number of quantiles (`q`) for all features (`f`), such that `f^q = c * m`:
+4. Calculate the `q` quantiles for each feature.
 
-  a. `q = log(c * m) / log(f)`
+5. Generate a set of all permutations of `c` quantiles (p).
 
-5. For each feature, calculate the `q` quantiles.
+6. Sort the non-minority class samples by their distance to each quantile for each feature.
 
-6. Generate a set of all permutations of `c` quantiles (`p`).
+7. For each quantile permutation in `p`, add the closest non-minority class sample to set `d`.
 
-7. For each feature, sort the non-minority class samples by their distance to each quantile.
-
-8. For each quantile permutation in `p`, add the closest non-minority class sample to set `d`:
-
-  a. Find the closest sample for each quantile permutation in `p`.
-
-  b. Add the closest sample to set `d`.
-
-  c. Remove that sample to avoid selecting it again.
-
-9. Return the balanced dataset `d`.
+8. Return the balanced dataset `d`.
 
 ## Usage
 
@@ -49,35 +38,7 @@ This algorithm can be implemented in various programming languages such as Pytho
 
 ## Example
 
-Here is a simple example of how to implement the Quantile-Based Balanced Sampling Algorithm in Python using the scikit-learn library:
-
-```python
-import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
-
-# Load the Iris dataset
-data = load_iris()
-X = data.data
-y = data.target
-
-# Standardize the features
-scaler = StandardScaler()
-X = scaler.fit_transform(X)
-
-# Implement the Quantile-Based Balanced Sampling Algorithm
-# ...
-
-# Split the balanced dataset into training and testing sets
-# ...
-
-# Train and evaluate a machine learning model
-# ...
-```
-
-## Optimizations
-
-Several optimizations can be applied to improve the time and space complexity of the Quantile-Based Balanced Sampling Algorithm. These include efficient quantile computation, parallel processing, partial sorting, reducing the number of permutations, data structure optimization, incremental updates, dimensionality reduction, and sampling techniques.
+Look at the [qbs.py](blob/main/qbs.py) file for a sample implementation.
 
 ## Contributing
 

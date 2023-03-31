@@ -1,4 +1,8 @@
 numpy
 scipy
+
+pandas
 matplotlib
-sklearn
+seaborn
+scikit-learn
+imbalanced-learn
