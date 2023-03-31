@@ -38,7 +38,7 @@ This algorithm can be implemented in various programming languages such as Pytho
 
 ## Example
 
-Look at the [qbs.py](blob/main/qbs.py) file for a sample implementation.
+Look at the [qbs.py](qbs.py) file for a sample implementation.
 
 ## Contributing
 
