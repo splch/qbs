@@ -1,45 +1,25 @@
-# Quantile-Based Balanced Sampling Algorithm
+# Quantile-Based Balanced Sampling
 
-The Quantile-Based Balanced Sampling Algorithm is a method for balancing imbalanced datasets, particularly when there is a significant disparity between the number of samples in majority and minority classes. This algorithm helps create a more balanced dataset to improve machine learning model performance by calculating quantiles for each feature and selecting the closest non-minority class samples to each quantile permutation.
+QBS is an undersampling algorithm for imbalanced datasets. It selects representative majority-class samples by placing a quantile-derived grid over the feature space and keeping the nearest real sample to each grid point.
 
-## Table of Contents
+## Algorithm
 
-- [Overview](#overview)
-- [Steps](#steps)
-- [Usage](#usage)
-- [Example](#example)
-- [Contributing](#contributing)
-
-## Overview
-
-The algorithm works by calculating quantiles for each feature in the dataset, generating a set of permutations of the quantiles, and selecting the closest non-minority class samples to each quantile permutation to balance the dataset. This process preserves the underlying data distribution while ensuring an equal representation of both majority and minority classes.
-
-## Steps
-
-1. Count the unique non-minority class labels (c), minority class samples (m), and features (f).
-
-2. Create an empty set (d) and add all minority class samples to it.
-
-3. Calculate the number of quantiles (q) such that `f^q=c*m`.
-
-4. Calculate the `q` quantiles for each feature.
-
-5. Generate a set of all permutations of `c` quantiles (p).
-
-6. Sort the non-minority class samples by their distance to each quantile for each feature.
-
-7. For each quantile permutation in `p`, add the closest non-minority class sample to set `d`.
-
-8. Return the balanced dataset `d`.
+1. Identify the minority class (count `m`), non-minority class count `c`, and feature count `f`.
+2. Keep all minority samples.
+3. Compute `q = ceil(log(c*m) / log(f))` quantiles per feature, so `q^f ≈ c*m`.
+4. Generate grid points from the quantile values — full enumeration when `q^f` is small, random sampling otherwise.
+5. For each grid point, find the nearest majority-class sample (via KDTree).
+6. Return the minority samples plus the unique selected majority samples.
 
 ## Usage
 
-This algorithm can be implemented in various programming languages such as Python, R, or MATLAB. You can use it to preprocess your imbalanced dataset before feeding it to your machine learning model. Please note that you may need to adjust the algorithm according to the specific data structure and requirements of your project.
+```python
+from qbs import qbs
 
-## Example
+X_balanced, y_balanced = qbs(X, y)
+```
 
-Look at the [qbs.py](qbs.py) file for a sample implementation.
+## Files
 
-## Contributing
-
-We welcome contributions to improve this algorithm. Feel free to submit pull requests or raise issues to discuss potential improvements, bug fixes, or feature requests.
+- `qbs.py` — the algorithm
+- `comparison.ipynb` — benchmark against other undersampling methods
