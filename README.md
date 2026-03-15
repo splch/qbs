@@ -1,25 +1,31 @@
-# Quantile-Based Balanced Sampling
+# Quantile Balanced Ensemble (QBE)
 
-QBS is an undersampling algorithm for imbalanced datasets. It selects representative majority-class samples by placing a quantile-derived grid over the feature space and keeping the nearest real sample to each grid point.
+An ensemble classifier for imbalanced datasets, inspired by [Quantile-Based Balanced Sampling](https://github.com/splch/qbs/tree/07a0a56).
+
+QBE uses QBS's core innovation — selecting representative samples via a quantile-derived grid over feature space — but wraps it in an ensemble to avoid the information loss inherent in single-pass undersampling. Each base learner trains on a different QBS-selected balanced subset, so collectively the ensemble covers the full majority distribution.
 
 ## Algorithm
 
-1. Identify the minority class (count `m`), non-minority class count `c`, and feature count `f`.
-2. Keep all minority samples.
-3. Compute `q = ceil(log(c*m) / log(f))` quantiles per feature, so `q^f ≈ c*m`.
-4. Generate grid points from the quantile values — full enumeration when `q^f` is small, random sampling otherwise.
-5. For each grid point, find the nearest majority-class sample (via KDTree).
-6. Return the minority samples plus the unique selected majority samples.
+1. Compute `q` quantile values per feature for the majority class.
+2. For each of `n_estimators` base learners:
+   - Sample random points from the quantile grid (different seed per learner).
+   - Find the nearest real majority samples via KDTree.
+   - Train a decision tree on all minority samples + selected majority samples.
+3. Predict by averaging `predict_proba` across all learners.
 
 ## Usage
 
 ```python
-from qbs import qbs
+from qbe import QuantileBalancedEnsemble
 
-X_balanced, y_balanced = qbs(X, y)
+clf = QuantileBalancedEnsemble(n_estimators=50, q=10, random_state=42)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
 ```
+
+sklearn-compatible — works with `cross_validate`, `Pipeline`, `GridSearchCV`, etc.
 
 ## Files
 
-- `qbs.py` — the algorithm
-- `comparison.ipynb` — benchmark against other undersampling methods
+- `qbe.py` — the algorithm
+- `comparison.ipynb` — benchmark against sampling methods and other ensemble classifiers
